@@ -1,0 +1,30 @@
+docker rm -f project-board-admin
+
+docker run -p 3307:3306 --name project-board-admin \
+  -e MYSQL_ROOT_PASSWORD="root" \
+  -e MYSQL_USER=uno \
+  -e MYSQL_PASSWORD="uno" \
+  -e MYSQL_DATABASE=admin \
+  -d mysql:latest
+
+docker rm -f project-board-admin
+
+docker exec -i -t 50698127c63e497288f9615120d5a611a61a9ae0665afe1b614ebaf3d39c206d  /bin/bash
+
+mysql -uroot -p
+
+select user from mysql.user;
+SHOW GRANTS FOR 'uno'@'%';
+
+grant all on `admin`.* to `uno`@`%` with grant option;
+
+flush privileges;
+
+./gradlew clean build -x test
+
+chmod +x run-local.sh
+
+./run-local.sh
+
+
+
